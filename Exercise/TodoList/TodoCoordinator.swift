@@ -10,7 +10,7 @@ import SwiftUI
 
 private final class TodoListHostingController: UIHostingController<TodoListScreen> {
     var onDeinit: (() -> Void)?
-
+    
     deinit {
         onDeinit?()
     }
@@ -20,7 +20,7 @@ final class TodoCoordinator: Coordinator {
     private let navigationController: UINavigationController
     private let todoListViewModel: TodoListViewModel
     private let onFinish: (() -> Void)?
-
+    
     init(
         navigationController: UINavigationController,
         todoListViewModel: TodoListViewModel,
@@ -30,10 +30,10 @@ final class TodoCoordinator: Coordinator {
         self.todoListViewModel = todoListViewModel
         self.onFinish = onFinish
     }
-
+    
     func start() {
         let hostingController = TodoListHostingController(rootView: TodoListScreen(viewModel: todoListViewModel))
-        hostingController.title = "TO-DO"
+        hostingController.title = L10n.todoListTitle
         hostingController.onDeinit = { [weak self] in
             self?.onFinish?()
         }
@@ -48,14 +48,14 @@ final class TodoCoordinator: Coordinator {
     // MARK: Private Methods
     
     @objc private func showAddTaskAlertController() {
-        let alertController = UIAlertController(title: "New Task", message: nil, preferredStyle: .alert)
+        let alertController = UIAlertController(title: L10n.newTaskAlertTitle, message: nil, preferredStyle: .alert)
         alertController.addTextField { textField in
-            textField.placeholder = "Task name"
+            textField.placeholder = L10n.taskNamePlaceholder
             textField.addTarget(self, action: #selector(self.taskNameTextDidChange(_:)), for: .editingChanged)
         }
         
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
-        let saveAction = UIAlertAction(title: "Save", style: .default) { [weak self, weak alertController] _ in
+        let cancelAction = UIAlertAction(title: L10n.cancelButtonTitle, style: .cancel)
+        let saveAction = UIAlertAction(title: L10n.saveButtonTitle, style: .default) { [weak self, weak alertController] _ in
             guard
                 let self,
                 let taskName = alertController?.textFields?.first?.text
@@ -70,15 +70,29 @@ final class TodoCoordinator: Coordinator {
         alertController.addAction(saveAction)
         navigationController.present(alertController, animated: true)
     }
-
+    
     @objc private func taskNameTextDidChange(_ textField: UITextField) {
         guard let text = textField.text, text.count > Constants.maxTaskNameLength else { return }
         textField.text = String(text.prefix(Constants.maxTaskNameLength))
     }
 }
 
+// MARK: - UI Constants
+
 extension TodoCoordinator {
     enum Constants {
         static let maxTaskNameLength = 50
+    }
+}
+
+// MARK: - localization
+
+extension TodoCoordinator {
+    enum L10n {
+        static let todoListTitle = NSLocalizedString("TO-DO", comment: "Todo list screen title")
+        static let newTaskAlertTitle = NSLocalizedString("New Task", comment: "New task alert title")
+        static let taskNamePlaceholder = NSLocalizedString("Task name", comment: "Task name input placeholder")
+        static let cancelButtonTitle = NSLocalizedString("Cancel", comment: "Cancel button title")
+        static let saveButtonTitle = NSLocalizedString("Save", comment: "Save button title")
     }
 }
