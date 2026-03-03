@@ -34,8 +34,8 @@ class AboutViewController: UIViewController {
         view.addSubview(label)
         
         NSLayoutConstraint.activate([
-            label.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: Constants.marging),
-            label.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -Constants.marging),
+            label.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: Constants.margin),
+            label.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -Constants.margin),
             label.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor),
         ])
         
@@ -47,6 +47,6 @@ class AboutViewController: UIViewController {
 extension AboutViewController {
     enum Constants {
         static let numberOfLines: Int = 0
-        static let marging: CGFloat = 32
+        static let margin: CGFloat = 32
     }
 }
